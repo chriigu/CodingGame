@@ -1,6 +1,6 @@
-﻿package org.example.cg.core;
+﻿package org.example.cg;
 
-import org.example.cg.exception.CodingGameException;
+import org.example.cg.core.exception.CodingGameException;
 
 public class CodingGameApp {
 

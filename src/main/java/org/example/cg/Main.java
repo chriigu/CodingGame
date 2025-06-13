@@ -1,8 +1,7 @@
 package org.example.cg;
 
-import org.example.cg.core.CodingGameApp;
-import org.example.cg.exception.CodingGameException;
-import org.example.cg.output.enums.ReturnCodeEnum;
+import org.example.cg.core.exception.CodingGameException;
+import org.example.cg.core.output.enums.ReturnCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

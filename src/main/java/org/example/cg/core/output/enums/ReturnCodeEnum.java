@@ -1,4 +1,4 @@
-﻿package org.example.cg.output.enums;
+﻿package org.example.cg.core.output.enums;
 
 public enum ReturnCodeEnum {
 

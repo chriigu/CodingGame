@@ -1,4 +1,4 @@
-﻿package org.example.cg.exception;
+﻿package org.example.cg.core.exception;
 
 public class CodingGameException extends RuntimeException{
 
