@@ -1,6 +1,8 @@
 package org.example.cg.core.input;
 
 import org.apache.commons.cli.*;
+import org.example.cg.core.action.Action;
+import org.example.cg.core.action.SumAction;
 import org.example.cg.core.dto.ProcessParamsDto;
 import org.example.cg.core.exception.CodingGameException;
 import org.example.cg.core.input.adapter.CLIInputAdapter;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CLIArgsParser {
     private static final Logger log = LoggerFactory.getLogger(CLIArgsParser.class);
@@ -34,7 +37,7 @@ public class CLIArgsParser {
     public ProcessParamsDto parse(String[] args) {
         CommandLineParser parser = new DefaultParser();
         try {
-            CommandLine cmd = parser.parse(options, args);
+            CommandLine cmd = parser.parse(options, args, true);
 
             log.info("Recognized options: [{}]", Arrays.toString(cmd.getOptions()));
 
@@ -47,9 +50,12 @@ public class CLIArgsParser {
             InputReader inputReader = parseInputReader(cmd);
             OutputAdapter outputAdapter = parseOutputAdapter(cmd);
             OutputWriter outputWriter = parseOutputWriter(cmd);
+            List<Action> actions = parseActions(cmd);
             String valueToProcess = parseValueToProcess(cmd);
 
-            return new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, valueToProcess);
+            ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, actions, valueToProcess);
+            log.info("Parsed data: {}", processParamsDto);
+            return processParamsDto;
         } catch (ParseException e) {
             throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Error parsing arguments", e);
         }
@@ -97,6 +103,14 @@ public class CLIArgsParser {
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_FORMAT.getParamIdentifier());
         log.info("Parsed output format (-{}): {}", InputParamIdentifierEnum.OUTPUT_FORMAT.getParamIdentifier(), parsedValue);
         return new CSVWriter();
+    }
+
+    List<Action> parseActions(final CommandLine cmd) {
+        checkCommandLine(cmd);
+
+        String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.ACTION.getParamIdentifier());
+        log.info("Parsed action (-{}): {}", InputParamIdentifierEnum.ACTION.getParamIdentifier(), parsedValue);
+        return List.of(new SumAction());
     }
 
     private void checkCommandLine(final CommandLine cmd) {
