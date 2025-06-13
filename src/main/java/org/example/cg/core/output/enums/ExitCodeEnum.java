@@ -1,6 +1,6 @@
 package org.example.cg.core.output.enums;
 
-public enum ReturnCodeEnum {
+public enum ExitCodeEnum {
 
     OK(0),
     INPUT_EMPTY(1),
@@ -10,7 +10,7 @@ public enum ReturnCodeEnum {
 
     private final int exitCode;
 
-    ReturnCodeEnum(int exitCode) {
+    ExitCodeEnum(int exitCode) {
         this.exitCode = exitCode;
     }
 

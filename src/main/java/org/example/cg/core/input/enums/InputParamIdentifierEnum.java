@@ -4,29 +4,48 @@ public enum InputParamIdentifierEnum {
 
     INPUT_SOURCE("i", """
             -i FILE | URL | -
-            • input, where FILE is a local file, URL an http/s URL, "-" stdin (default)
+             input, where FILE is a local file, URL an http/s URL, "-" stdin (default)
             """, true),
     OUTPUT_DESTINATION("o", """
             -o FILE | URL | -
-            • output, where FILE is a local file, URL an http/s URL, "-" stdin (default). Existing
+             output, where FILE is a local file, URL an http/s URL, "-" stdin (default). Existing
             output is overwritten.
             """, true),
     INPUT_FORMAT("f", """
             -f csv | json
-            • input format csv (default) or a json array
+             input format csv (default) or a json array
             """, true),
     OUTPUT_FORMAT("F", """
             -F csv | json
-            • output format csv (default) or json
+             output format csv (default) or json
             """, true),
     ACTION("a", """
             -a sum | minMax | LT4
-            • action
-            • sum: prints the sum of the input values
-            • minMax: prints the min and the max of the input values
-            • lt4: prints the input values less than 4
+             action
+             sum: prints the sum of the input values
+             minMax: prints the min and the max of the input values
+             lt4: prints the input values less than 4
             """, true),
     HELP("help", """
+            Options
+             -i FILE | URL | -
+             input, where FILE is a local file, URL an http/s URL, "-" stdin (default)
+             -o FILE | URL | -
+             input, where FILE is a local file, URL an http/s URL, "-" stdin (default). Existing
+            output is overwritten.
+             -f csv | json
+             output format csv (default) or a json array
+             -F csv | json
+             output format csv (default) or json
+             The exact output format depends on the action option, see the details section
+            below.
+             -a sum | minMax | LT4
+             action
+             sum: prints the sum of the input values
+             minMax: prints the min and the max of the input values
+             lt4: prints the input values less than 4
+             -help
+             Shows information about available commands
             """, false);
 
     private final String paramIdentifier;
