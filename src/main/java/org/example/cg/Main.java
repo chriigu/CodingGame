@@ -10,15 +10,15 @@ import org.slf4j.LoggerFactory;
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
-    public static int main(String[] args) {
+    public static void main(String[] args) {
 
         try {
             new CodingGameApp().runApp(args);
         } catch (CodingGameException e) {
             log.error("An error with errorCode [{}] occurred during runtime: {}", e.getErrorCode(), e.getMessage(), e);
-            return e.getErrorCode();
+            System.exit(e.getErrorCode());
         }
 
-        return ReturnCodeEnum.OK.getErrorCode();
+        System.exit(ReturnCodeEnum.OK.getExitCode());
     }
 }

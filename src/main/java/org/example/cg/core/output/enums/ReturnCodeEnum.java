@@ -1,4 +1,4 @@
-﻿package org.example.cg.core.output.enums;
+package org.example.cg.core.output.enums;
 
 public enum ReturnCodeEnum {
 
@@ -8,13 +8,13 @@ public enum ReturnCodeEnum {
     WRITE_ERROR(3),
     FORMAT_ERROR(4);
 
-    private final int errorCode;
+    private final int exitCode;
 
-    ReturnCodeEnum(int errorCode) {
-        this.errorCode = errorCode;
+    ReturnCodeEnum(int exitCode) {
+        this.exitCode = exitCode;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public int getExitCode() {
+        return exitCode;
     }
 }
