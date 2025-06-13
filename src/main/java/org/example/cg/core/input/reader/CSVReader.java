@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CSVReader implements InputReader{
 
-    private CSVValidator validator;
+    private final CSVValidator validator;
 
     public CSVReader() {
         this.validator = new CSVValidator();
