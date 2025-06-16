@@ -6,7 +6,5 @@ import org.example.cg.core.input.reader.InputReader;
 import org.example.cg.core.output.adapter.OutputAdapter;
 import org.example.cg.core.output.writer.OutputWriter;
 
-import java.util.List;
-
-public record ProcessParamsDto(InputAdapter inputAdapter, InputReader inputReader, OutputAdapter outputAdapter, OutputWriter outputWriter, List<Action> actions, String valueSource) {
+public record ProcessParamsDto(InputAdapter inputAdapter, InputReader inputReader, OutputAdapter outputAdapter, OutputWriter outputWriter, Action action, String valueSource) {
 }

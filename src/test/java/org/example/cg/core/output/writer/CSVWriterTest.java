@@ -29,7 +29,7 @@ class CSVWriterTest {
         // given
         List<Double> input = null;
         // when
-        String result = csvWriter.writeOutputString(input);
+        String result = csvWriter.writeOutputString(input, null);
         // then
         assertEquals("\n", result);
     }
@@ -39,7 +39,7 @@ class CSVWriterTest {
         // given
         List<Double> input = new ArrayList<>();
         // when
-        String result = csvWriter.writeOutputString(input);
+        String result = csvWriter.writeOutputString(input, null);
         // then
         assertEquals("\n", result);
     }
@@ -56,7 +56,7 @@ class CSVWriterTest {
     void writeOutputStringValid(List<Double> input, String expectedOutput) {
         // given
         // when
-        String result = csvWriter.writeOutputString(input);
+        String result = csvWriter.writeOutputString(input, null);
         // then
         assertEquals(expectedOutput, result);
     }

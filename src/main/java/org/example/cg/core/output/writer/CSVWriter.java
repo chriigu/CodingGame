@@ -1,5 +1,6 @@
 package org.example.cg.core.output.writer;
 
+import org.example.cg.core.dto.ProcessParamsDto;
 import org.example.cg.core.validator.CSVValidator;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class CSVWriter implements OutputWriter {
     }
 
     @Override
-    public String writeOutputString(final List<Double> valuesToWrite) {
+    public String writeOutputString(final List<Double> valuesToWrite, ProcessParamsDto processParamsDto) {
         if(valuesToWrite == null || valuesToWrite.isEmpty()) {
             return "\n";
         }

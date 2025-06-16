@@ -81,9 +81,8 @@ class CLIArgsParserTest {
 
         // then
         assertNotNull(result);
-        assertNotNull(result.actions());
-        assertEquals(1, result.actions().size());
-        assertEquals(SumAction.class, result.actions().getFirst().getClass());
+        assertNotNull(result.action());
+        assertEquals(SumAction.class, result.action().getClass());
         assertEquals("1,2", result.valueSource());
         assertEquals(CLIInputAdapter.class, result.inputAdapter().getClass());
         assertEquals(CSVReader.class, result.inputReader().getClass());
@@ -219,26 +218,25 @@ class CLIArgsParserTest {
     }
 
     @Test
-    void parseActionsNull() {
+    void parseActionNull() {
         // given
         CommandLine input = null;
         // when
-        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseActions(input));
+        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseAction(input));
         // then
         assertEquals(INPUT_EMPTY.getExitCode(), result.getErrorCode());
     }
 
     @Test
-    void parseActions() {
+    void parseAction() {
         // given
         CommandLine input = mock(CommandLine.class);
         when(input.getOptionValue("a")).thenReturn("sum");
         // when
-        List<Action> result = cliArgsParser.parseActions(input);
+        Action result = cliArgsParser.parseAction(input);
 
         // then
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(SumAction.class, result.getFirst().getClass());
+        assertEquals(SumAction.class, result.getClass());
     }
 }

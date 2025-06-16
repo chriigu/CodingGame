@@ -27,8 +27,8 @@ public class CodingGameApp {
 
         String inputString = processParamsDto.inputAdapter().readInput(processParamsDto);
         List<Double> valuesToProcess = processParamsDto.inputReader().readInputString(inputString);
-        List<Double> resultList = processParamsDto.actions().getFirst().execute(valuesToProcess);
-        String outputString = processParamsDto.outputWriter().writeOutputString(resultList);
+        List<Double> resultList = processParamsDto.action().execute(valuesToProcess);
+        String outputString = processParamsDto.outputWriter().writeOutputString(resultList, processParamsDto);
         processParamsDto.outputAdapter().writeResultString(outputString);
 
         return ExitCodeEnum.OK.getExitCode();

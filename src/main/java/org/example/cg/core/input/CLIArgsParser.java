@@ -18,13 +18,13 @@ import org.example.cg.core.output.adapter.CLIOutputAdapter;
 import org.example.cg.core.output.adapter.OutputAdapter;
 import org.example.cg.core.output.enums.ExitCodeEnum;
 import org.example.cg.core.output.writer.CSVWriter;
+import org.example.cg.core.output.writer.JSONWriter;
 import org.example.cg.core.output.writer.OutputWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CLIArgsParser {
@@ -34,6 +34,8 @@ public class CLIArgsParser {
 
     private final Options options;
     private final CommandLineParser parser;
+
+    private String parsedAction;
 
     public CLIArgsParser() {
         this(new Options(),
@@ -70,10 +72,10 @@ public class CLIArgsParser {
             InputReader inputReader = parseInputReader(cmd);
             OutputAdapter outputAdapter = parseOutputAdapter(cmd);
             OutputWriter outputWriter = parseOutputWriter(cmd);
-            List<Action> actions = parseActions(cmd);
+            Action action = parseAction(cmd);
             String valueToProcess = parseValueSource(cmd);
 
-            ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, actions, valueToProcess);
+            ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, action, valueToProcess);
             log.info("Parsed data: {}", processParamsDto);
             return processParamsDto;
         } catch (ParseException e) {
@@ -134,10 +136,11 @@ public class CLIArgsParser {
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_FORMAT.getParamIdentifier());
         log.info("Parsed output format (-{}): {}", InputParamIdentifierEnum.OUTPUT_FORMAT.getParamIdentifier(), parsedValue);
-        return new CSVWriter();
+
+        return parsedValue != null && parsedValue.equals("json") ? new JSONWriter() : new CSVWriter();
     }
 
-    List<Action> parseActions(final CommandLine cmd) {
+    Action parseAction(final CommandLine cmd) {
         checkCommandLine(cmd);
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.ACTION.getParamIdentifier());
@@ -145,8 +148,7 @@ public class CLIArgsParser {
             throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Action to execute is missing");
         }
         log.info("Parsed action (-{}): {}", InputParamIdentifierEnum.ACTION.getParamIdentifier(), parsedValue);
-        Action result = actions.get(ActionIdentifierEnum.getEnum(parsedValue.toLowerCase()));
-        return List.of(result);
+        return actions.get(ActionIdentifierEnum.getEnum(parsedValue.toLowerCase()));
     }
 
     private void checkCommandLine(final CommandLine cmd) {

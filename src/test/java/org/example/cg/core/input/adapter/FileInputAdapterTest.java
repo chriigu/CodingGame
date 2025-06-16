@@ -3,8 +3,6 @@ package org.example.cg.core.input.adapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Test with non existing file -> Exception
  * Test with empty file -> should return empty string
