@@ -15,6 +15,7 @@ import org.example.cg.core.input.adapter.URIInputAdapter;
 import org.example.cg.core.input.enums.InputParamIdentifierEnum;
 import org.example.cg.core.input.reader.CSVReader;
 import org.example.cg.core.input.reader.InputReader;
+import org.example.cg.core.input.reader.JSONReader;
 import org.example.cg.core.output.adapter.CLIOutputAdapter;
 import org.example.cg.core.output.adapter.FileOutputAdapter;
 import org.example.cg.core.output.adapter.OutputAdapter;
@@ -125,7 +126,8 @@ public class CLIArgsParser {
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_FORMAT.getParamIdentifier());
         log.info("Parsed input format (-{}): {}", InputParamIdentifierEnum.INPUT_FORMAT.getParamIdentifier(), parsedValue);
-        return new CSVReader();
+
+        return parsedValue != null && parsedValue.equals("json") ? new JSONReader() : new CSVReader();
     }
 
     OutputAdapter parseOutputAdapter(final CommandLine cmd) {
