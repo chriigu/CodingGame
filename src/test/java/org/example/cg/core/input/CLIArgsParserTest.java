@@ -33,6 +33,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Test parseActions for invalid actions and for all valid action arguments
+ * Test other methods to parse for things after the lower priority functions have been added similarly with if/else to test the branches and output values
  */
 class CLIArgsParserTest {
 

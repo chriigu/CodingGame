@@ -11,12 +11,14 @@ import org.example.cg.core.exception.CodingGameException;
 import org.example.cg.core.input.adapter.CLIInputAdapter;
 import org.example.cg.core.input.adapter.FileInputAdapter;
 import org.example.cg.core.input.adapter.InputAdapter;
+import org.example.cg.core.input.adapter.URIInputAdapter;
 import org.example.cg.core.input.enums.InputParamIdentifierEnum;
 import org.example.cg.core.input.reader.CSVReader;
 import org.example.cg.core.input.reader.InputReader;
 import org.example.cg.core.output.adapter.CLIOutputAdapter;
 import org.example.cg.core.output.adapter.FileOutputAdapter;
 import org.example.cg.core.output.adapter.OutputAdapter;
+import org.example.cg.core.output.adapter.URIOutputAdapter;
 import org.example.cg.core.output.enums.ExitCodeEnum;
 import org.example.cg.core.output.writer.CSVWriter;
 import org.example.cg.core.output.writer.JSONWriter;
@@ -24,6 +26,7 @@ import org.example.cg.core.output.writer.OutputWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,16 +91,14 @@ public class CLIArgsParser {
     String parseValueSource(final CommandLine cmd) {
         checkCommandLine(cmd);
 
-        String parsedValue = null;
+        String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier());
         // If input option is default then parse value from CLI
-        if (inputAdapterIsDefault(cmd)) {
+        if (inputAdapterIsDefault(parsedValue)) {
             if (cmd.getArgList().isEmpty()) {
                 throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Error no input value to process");
             }
             parsedValue = cmd.getArgList().getFirst();
 
-        } else {
-            parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier());
         }
 
         log.info("Parsed value: {}", parsedValue);
@@ -110,8 +111,10 @@ public class CLIArgsParser {
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier());
         log.info("Parsed input method (-{}): {}", InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier(), parsedValue);
 
-        if (inputAdapterIsDefault(cmd)) {
+        if (inputAdapterIsDefault(parsedValue)) {
             return new CLIInputAdapter();
+        } else if (isURI(parsedValue)) {
+            return new URIInputAdapter();
         }
 
         return new FileInputAdapter();
@@ -131,8 +134,10 @@ public class CLIArgsParser {
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier());
         log.info("Parsed output method (-{}): {}", InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier(), parsedValue);
 
-        if(outputAdapterIsDefault(cmd)) {
+        if (outputAdapterIsDefault(parsedValue)) {
             return new CLIOutputAdapter();
+        } else if (isURI(parsedValue)) {
+            return new URIOutputAdapter();
         }
 
         return new FileOutputAdapter();
@@ -173,13 +178,26 @@ public class CLIArgsParser {
         }
     }
 
-    private boolean inputAdapterIsDefault(CommandLine cmd) {
-        return !cmd.hasOption(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier()) ||
-                cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier()).equals("-");
+    private boolean inputAdapterIsDefault(String parsedInputAdapter) {
+        return parsedInputAdapter == null ||
+                parsedInputAdapter.equals("-");
     }
 
-    private boolean outputAdapterIsDefault(CommandLine cmd) {
-        return !cmd.hasOption(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier()) ||
-                cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier()).equals("-");
+    private boolean outputAdapterIsDefault(String parsedOutputAdapter) {
+        return parsedOutputAdapter == null ||
+                parsedOutputAdapter.equals("-");
+    }
+
+    private boolean isURI(String isURI) {
+        if(!isURI.startsWith("http://") && !isURI.startsWith("https://") && !isURI.startsWith("www.")) {
+            return false;
+        }
+        try {
+            URI.create(isURI);
+            return true;
+        } catch (IllegalArgumentException e) {
+            // Ignore -> should be a file if it's not a valid URI
+        }
+        return false;
     }
 }
