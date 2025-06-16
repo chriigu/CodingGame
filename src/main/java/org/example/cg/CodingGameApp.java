@@ -9,8 +9,17 @@ import java.util.List;
 
 public class CodingGameApp {
 
+    private final CLIArgsParser parser;
+
+    public CodingGameApp() {
+        this(new CLIArgsParser());
+    }
+
+    public CodingGameApp(CLIArgsParser parser) {
+        this.parser = parser;
+    }
+
     public int runApp(String[] args) throws CodingGameException {
-        CLIArgsParser parser = new CLIArgsParser();
         ProcessParamsDto processParamsDto = parser.parse(args);
         if (processParamsDto == null) {
             return ExitCodeEnum.OK.getExitCode();

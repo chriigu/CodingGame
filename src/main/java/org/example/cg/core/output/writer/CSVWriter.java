@@ -10,7 +10,7 @@ public class CSVWriter implements OutputWriter {
     private final CSVValidator validator;
 
     public CSVWriter() {
-        this.validator = new CSVValidator();
+        this(new CSVValidator());
     }
 
     public CSVWriter(CSVValidator validator) {

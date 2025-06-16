@@ -12,12 +12,17 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        int exitCode;
         try {
             log.info("Starting coding game with arguments {}", Arrays.toString(args));
-            System.exit(new CodingGameApp().runApp(args));
+            exitCode = new CodingGameApp().runApp(args);
+
         } catch (CodingGameException e) {
             log.error("An error with errorCode [{}] occurred during runtime: {}", e.getErrorCode(), e.getMessage(), e);
-            System.exit(e.getErrorCode());
+            exitCode = e.getErrorCode();
         }
+
+        log.info("Exiting coding game with exitCode {}", exitCode);
+        System.exit(exitCode);
     }
 }

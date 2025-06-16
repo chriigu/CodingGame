@@ -10,7 +10,7 @@ public class CSVReader implements InputReader{
     private final CSVValidator validator;
 
     public CSVReader() {
-        this.validator = new CSVValidator();
+        this(new CSVValidator());
     }
 
     public CSVReader(CSVValidator validator) {

@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.example.cg.core.output.enums.ExitCodeEnum.INPUT_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
@@ -33,8 +34,9 @@ class CSVReaderTest {
         String input = null;
         doThrow(new CodingGameException(1, "testerr")).when(mockValidator).validateString(isNull());
         // when
-        assertThrows(CodingGameException.class, () -> csvReader.readInputString(input));
+        CodingGameException result = assertThrows(CodingGameException.class, () -> csvReader.readInputString(input));
         // then
+        assertEquals(INPUT_EMPTY.getExitCode(), result.getErrorCode());
     }
 
     private static Stream<Arguments> emptyArgs() {
@@ -53,8 +55,9 @@ class CSVReaderTest {
         // given
         doThrow(new CodingGameException(1, "testerr")).when(mockValidator).validateString(eq(inputString));
         // when
-        assertThrows(CodingGameException.class, () -> csvReader.readInputString(inputString));
+        CodingGameException result = assertThrows(CodingGameException.class, () -> csvReader.readInputString(inputString));
         // then
+        assertEquals(INPUT_EMPTY.getExitCode(), result.getErrorCode());
     }
 
     private static Stream<Arguments> validArgs() {
