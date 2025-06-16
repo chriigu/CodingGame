@@ -76,8 +76,9 @@ class MainSystemSmokeTest {
         int exitCode = process.waitFor();
         assertEquals(0, exitCode);
         assertFalse(output.isEmpty());
-        assertEquals("[main] INFO org.example.cg.core.output.adapter.CLIOutputAdapter - 2.377", output.get(output.size() - 2));
-        assertEquals("", output.getLast());
+        assertEquals("[main] INFO org.example.cg.core.output.adapter.CLIOutputAdapter - 2.377", output.get(output.size() - 3));
+        assertEquals("", output.get(output.size() - 2));
+        assertEquals("[main] INFO org.example.cg.Main - Exiting coding game with exitCode 0", output.getLast());
     }
 
     @AfterEach
