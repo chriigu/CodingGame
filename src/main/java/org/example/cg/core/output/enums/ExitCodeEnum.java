@@ -10,7 +10,7 @@ public enum ExitCodeEnum {
 
     private final int exitCode;
 
-    ExitCodeEnum(int exitCode) {
+    ExitCodeEnum(final int exitCode) {
         this.exitCode = exitCode;
     }
 

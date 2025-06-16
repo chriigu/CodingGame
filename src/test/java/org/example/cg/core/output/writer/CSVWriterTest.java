@@ -17,11 +17,10 @@ import static org.mockito.Mockito.mock;
 class CSVWriterTest {
 
     private CSVWriter csvWriter;
-    private CSVValidator mockValidator;
 
     @BeforeEach
     void setUp() {
-        mockValidator = mock(CSVValidator.class);
+        CSVValidator mockValidator = mock(CSVValidator.class);
         csvWriter = new CSVWriter(mockValidator);
     }
 

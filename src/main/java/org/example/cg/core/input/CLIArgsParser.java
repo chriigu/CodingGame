@@ -32,7 +32,7 @@ public class CLIArgsParser {
         this(new Options(), new DefaultParser());
     }
 
-    public CLIArgsParser(Options options, CommandLineParser parser) {
+    public CLIArgsParser(final Options options, final CommandLineParser parser) {
         this.options = options;
         for (InputParamIdentifierEnum paramIdentifier : InputParamIdentifierEnum.values()) {
             options.addOption(paramIdentifier.getParamIdentifier(), paramIdentifier.hasArg(), paramIdentifier.getParamDesc());
@@ -40,7 +40,7 @@ public class CLIArgsParser {
         this.parser = parser;
     }
 
-    public ProcessParamsDto parse(String[] args) {
+    public ProcessParamsDto parse(final String[] args) {
         try {
             // stopAtNonOption flag is true so it parses negative floating point numbers correctly
             CommandLine cmd = parser.parse(options, args, true);
@@ -67,7 +67,7 @@ public class CLIArgsParser {
         }
     }
 
-    String parseValueToProcess(CommandLine cmd) {
+    String parseValueToProcess(final CommandLine cmd) {
         checkCommandLine(cmd);
 
         if(cmd.getArgList().isEmpty()) {

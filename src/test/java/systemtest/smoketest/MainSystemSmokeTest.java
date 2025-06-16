@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  */
 class MainSystemSmokeTest {
 
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final static boolean isWindows = System.getProperty("os.name")
             .toLowerCase().startsWith("windows");
 

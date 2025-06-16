@@ -9,7 +9,7 @@ public class CLIOutputAdapter implements OutputAdapter {
 
 
     @Override
-    public void writeResultString(String outputString) {
+    public void writeResultString(final String outputString) {
         log.info(outputString);
     }
 }

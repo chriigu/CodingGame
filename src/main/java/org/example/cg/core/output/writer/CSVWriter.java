@@ -13,12 +13,12 @@ public class CSVWriter implements OutputWriter {
         this(new CSVValidator());
     }
 
-    public CSVWriter(CSVValidator validator) {
+    public CSVWriter(final CSVValidator validator) {
         this.validator = validator;
     }
 
     @Override
-    public String writeOutputString(List<Double> valuesToWrite) {
+    public String writeOutputString(final List<Double> valuesToWrite) {
         if(valuesToWrite == null || valuesToWrite.isEmpty()) {
             return "\n";
         }

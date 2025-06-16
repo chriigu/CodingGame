@@ -5,7 +5,7 @@ import org.example.cg.core.output.enums.ExitCodeEnum;
 
 public class CSVValidator {
 
-    public void validateString(String valueToValidate) {
+    public void validateString(final String valueToValidate) {
         if(valueToValidate == null || valueToValidate.isBlank()) {
             throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Input is empty");
         }

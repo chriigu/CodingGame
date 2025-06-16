@@ -13,12 +13,12 @@ public class CSVReader implements InputReader{
         this(new CSVValidator());
     }
 
-    public CSVReader(CSVValidator validator) {
+    public CSVReader(final CSVValidator validator) {
         this.validator = validator;
     }
 
     @Override
-    public List<Double> readInputString(String input) {
+    public List<Double> readInputString(final String input) {
         validator.validateString(input);
 
         String trimmedInput = input.replace(" ", "")

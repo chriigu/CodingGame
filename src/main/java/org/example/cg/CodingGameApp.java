@@ -15,11 +15,11 @@ public class CodingGameApp {
         this(new CLIArgsParser());
     }
 
-    public CodingGameApp(CLIArgsParser parser) {
+    public CodingGameApp(final CLIArgsParser parser) {
         this.parser = parser;
     }
 
-    public int runApp(String[] args) throws CodingGameException {
+    public int runApp(final String[] args) throws CodingGameException {
         ProcessParamsDto processParamsDto = parser.parse(args);
         if (processParamsDto == null) {
             return ExitCodeEnum.OK.getExitCode();
