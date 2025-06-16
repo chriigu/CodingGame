@@ -5,7 +5,10 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.example.cg.core.action.Action;
+import org.example.cg.core.action.LT4Action;
+import org.example.cg.core.action.MinMaxAction;
 import org.example.cg.core.action.SumAction;
+import org.example.cg.core.action.enums.ActionIdentifierEnum;
 import org.example.cg.core.dto.ProcessParamsDto;
 import org.example.cg.core.exception.CodingGameException;
 import org.example.cg.core.input.adapter.CLIInputAdapter;
@@ -20,14 +23,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.example.cg.core.output.enums.ExitCodeEnum.INPUT_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test every parse Sub method if it parses the
+ * Test parseActions for invalid actions and for all valid action arguments
  */
 class CLIArgsParserTest {
 
@@ -46,7 +51,7 @@ class CLIArgsParserTest {
         CommandLine cmd  = mock(CommandLine.class);
         when(cmd.hasOption("help")).thenReturn(true);
         when(parser.parse(eq(options), any(), eq(true))).thenReturn(cmd);
-        cliArgsParser = new CLIArgsParser(options, parser);
+        cliArgsParser = new CLIArgsParser(options, parser, new HashMap<>());
 
         // when
         ProcessParamsDto result = cliArgsParser.parse(List.of("-f", "csv", "-F", "csv", "1,2", "-a" , "sum").toArray(new String[0]));
@@ -65,7 +70,11 @@ class CLIArgsParserTest {
         when(cmd.getOptionValue("a")).thenReturn("sum");
         when(cmd.hasOption("help")).thenReturn(false);
         when(parser.parse(eq(options), any(), eq(true))).thenReturn(cmd);
-        cliArgsParser = new CLIArgsParser(options, parser);
+        cliArgsParser = new CLIArgsParser(options, parser, new HashMap<>(
+                Map.of(ActionIdentifierEnum.SUM, new SumAction(),
+                        ActionIdentifierEnum.MIN_MAX, new MinMaxAction(),
+                        ActionIdentifierEnum.LT4, new LT4Action())
+        ));
 
         // when
         ProcessParamsDto result = cliArgsParser.parse(List.of("-f", "csv", "-F", "csv", "1,2", "-a" , "sum").toArray(new String[0]));
@@ -75,7 +84,7 @@ class CLIArgsParserTest {
         assertNotNull(result.actions());
         assertEquals(1, result.actions().size());
         assertEquals(SumAction.class, result.actions().getFirst().getClass());
-        assertEquals("1,2", result.valueToProcess());
+        assertEquals("1,2", result.valueSource());
         assertEquals(CLIInputAdapter.class, result.inputAdapter().getClass());
         assertEquals(CSVReader.class, result.inputReader().getClass());
         assertEquals(CLIOutputAdapter.class, result.outputAdapter().getClass());
@@ -83,33 +92,33 @@ class CLIArgsParserTest {
     }
 
     @Test
-    void parseValueToProcessNull() {
+    void parseValueSourceNull() {
         // given
         CommandLine input = null;
         // when
-        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseValueToProcess(input));
+        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseValueSource(input));
         // then
         assertEquals(INPUT_EMPTY.getExitCode(), result.getErrorCode());
     }
 
     @Test
-    void parseValueToProcessEmptyInput() {
+    void parseValueSourceEmptyInput() {
         // given
         CommandLine input = mock(CommandLine.class);
         when(input.getArgList()).thenReturn(Collections.emptyList());
         // when
-        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseValueToProcess(input));
+        CodingGameException result = assertThrows(CodingGameException.class, () -> cliArgsParser.parseValueSource(input));
         // then
         assertEquals(INPUT_EMPTY.getExitCode(), result.getErrorCode());
     }
 
     @Test
-    void parseValueToProcess() {
+    void parseValueSource() {
         // given
         CommandLine input = mock(CommandLine.class);
         when(input.getArgList()).thenReturn(List.of("1.2,1"));
         // when
-        String result = cliArgsParser.parseValueToProcess(input);
+        String result = cliArgsParser.parseValueSource(input);
 
         // then
         assertNotNull(result);

@@ -8,7 +8,7 @@ public enum InputParamIdentifierEnum {
             """, true),
     OUTPUT_DESTINATION("o", """
             -o FILE | URL | -
-             output, where FILE is a local file, URL an http/s URL, "-" stdin (default). Existing
+             output, where FILE is a local file, URL an http/s URL, "-" stdout (default). Existing
             output is overwritten.
             """, true),
     INPUT_FORMAT("f", """
@@ -31,7 +31,7 @@ public enum InputParamIdentifierEnum {
              -i FILE | URL | -
              input, where FILE is a local file, URL an http/s URL, "-" stdin (default)
              -o FILE | URL | -
-             input, where FILE is a local file, URL an http/s URL, "-" stdin (default). Existing
+             input, where FILE is a local file, URL an http/s URL, "-" stdout (default). Existing
             output is overwritten.
              -f csv | json
              output format csv (default) or a json array

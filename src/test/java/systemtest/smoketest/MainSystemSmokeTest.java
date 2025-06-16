@@ -55,7 +55,7 @@ class MainSystemSmokeTest {
         ProcessBuilder builder = new ProcessBuilder();
         builder.directory(new File("target"));
         if (isWindows) {
-            builder.command("cmd.exe", "/c", "java -Dorg.slf4j.simpleLogger.logFile=System.out -jar cg-0.1.0-SNAPSHOT.jar -f csv -F csv -0.123,2.5 -a sum");
+            builder.command("cmd.exe", "/c", "java -Dorg.slf4j.simpleLogger.logFile=System.out -jar cg-0.1.0-SNAPSHOT.jar -f csv -F csv -a sum -0.123,2.5");
         } else {
             // TODO make it work for linux
             builder.command("sh", "-c", "java -Dorg.slf4j.simpleLogger.logFile=System.out -jar cg-0.1.0-SNAPSHOT.jar -f csv -F csv -0.123,2.5 -a sum");

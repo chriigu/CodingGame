@@ -8,5 +8,5 @@ import org.example.cg.core.output.writer.OutputWriter;
 
 import java.util.List;
 
-public record ProcessParamsDto(InputAdapter inputAdapter, InputReader inputReader, OutputAdapter outputAdapter, OutputWriter outputWriter, List<Action> actions, String valueToProcess) {
+public record ProcessParamsDto(InputAdapter inputAdapter, InputReader inputReader, OutputAdapter outputAdapter, OutputWriter outputWriter, List<Action> actions, String valueSource) {
 }

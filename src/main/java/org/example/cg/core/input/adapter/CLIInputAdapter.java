@@ -6,6 +6,6 @@ public class CLIInputAdapter implements InputAdapter {
 
     @Override
     public String readInput(final ProcessParamsDto processParamsDto) {
-        return processParamsDto.valueToProcess();
+        return processParamsDto.valueSource();
     }
 }

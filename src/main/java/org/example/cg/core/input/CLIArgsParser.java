@@ -2,10 +2,14 @@ package org.example.cg.core.input;
 
 import org.apache.commons.cli.*;
 import org.example.cg.core.action.Action;
+import org.example.cg.core.action.LT4Action;
+import org.example.cg.core.action.MinMaxAction;
 import org.example.cg.core.action.SumAction;
+import org.example.cg.core.action.enums.ActionIdentifierEnum;
 import org.example.cg.core.dto.ProcessParamsDto;
 import org.example.cg.core.exception.CodingGameException;
 import org.example.cg.core.input.adapter.CLIInputAdapter;
+import org.example.cg.core.input.adapter.FileInputAdapter;
 import org.example.cg.core.input.adapter.InputAdapter;
 import org.example.cg.core.input.enums.InputParamIdentifierEnum;
 import org.example.cg.core.input.reader.CSVReader;
@@ -19,25 +23,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CLIArgsParser {
     private static final Logger log = LoggerFactory.getLogger(CLIArgsParser.class);
 
+    private final Map<ActionIdentifierEnum, Action> actions;
 
     private final Options options;
     private final CommandLineParser parser;
 
     public CLIArgsParser() {
-        this(new Options(), new DefaultParser());
+        this(new Options(),
+                new DefaultParser(),
+                new HashMap<>(
+                        Map.of(ActionIdentifierEnum.SUM, new SumAction(),
+                                ActionIdentifierEnum.MIN_MAX, new MinMaxAction(),
+                                ActionIdentifierEnum.LT4, new LT4Action())
+                ));
     }
 
-    public CLIArgsParser(final Options options, final CommandLineParser parser) {
+    public CLIArgsParser(final Options options, final CommandLineParser parser, final Map<ActionIdentifierEnum, Action> actionsMap) {
         this.options = options;
         for (InputParamIdentifierEnum paramIdentifier : InputParamIdentifierEnum.values()) {
             options.addOption(paramIdentifier.getParamIdentifier(), paramIdentifier.hasArg(), paramIdentifier.getParamDesc());
         }
         this.parser = parser;
+        this.actions = actionsMap;
     }
 
     public ProcessParamsDto parse(final String[] args) {
@@ -57,7 +71,7 @@ public class CLIArgsParser {
             OutputAdapter outputAdapter = parseOutputAdapter(cmd);
             OutputWriter outputWriter = parseOutputWriter(cmd);
             List<Action> actions = parseActions(cmd);
-            String valueToProcess = parseValueToProcess(cmd);
+            String valueToProcess = parseValueSource(cmd);
 
             ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, actions, valueToProcess);
             log.info("Parsed data: {}", processParamsDto);
@@ -67,14 +81,21 @@ public class CLIArgsParser {
         }
     }
 
-    String parseValueToProcess(final CommandLine cmd) {
+    String parseValueSource(final CommandLine cmd) {
         checkCommandLine(cmd);
 
-        if(cmd.getArgList().isEmpty()) {
-            throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Error no input value to process");
+        String parsedValue = null;
+        // If input option is default then parse value from CLI
+        if (inputAdapterIsDefault(cmd)) {
+            if (cmd.getArgList().isEmpty()) {
+                throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Error no input value to process");
+            }
+            parsedValue = cmd.getArgList().getFirst();
+
+        } else {
+            parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier());
         }
 
-        String parsedValue = cmd.getArgList().getFirst();
         log.info("Parsed value: {}", parsedValue);
         return parsedValue;
     }
@@ -84,7 +105,12 @@ public class CLIArgsParser {
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier());
         log.info("Parsed input method (-{}): {}", InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier(), parsedValue);
-        return new CLIInputAdapter();
+
+        if (inputAdapterIsDefault(cmd)) {
+            return new CLIInputAdapter();
+        }
+
+        return new FileInputAdapter();
     }
 
     InputReader parseInputReader(final CommandLine cmd) {
@@ -115,13 +141,27 @@ public class CLIArgsParser {
         checkCommandLine(cmd);
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.ACTION.getParamIdentifier());
+        if (parsedValue == null) {
+            throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Action to execute is missing");
+        }
         log.info("Parsed action (-{}): {}", InputParamIdentifierEnum.ACTION.getParamIdentifier(), parsedValue);
-        return List.of(new SumAction());
+        Action result = actions.get(ActionIdentifierEnum.getEnum(parsedValue.toLowerCase()));
+        return List.of(result);
     }
 
     private void checkCommandLine(final CommandLine cmd) {
-        if(cmd == null) {
+        if (cmd == null) {
             throw new CodingGameException(ExitCodeEnum.INPUT_EMPTY.getExitCode(), "Commandline is empty");
         }
+    }
+
+    private boolean inputAdapterIsDefault(CommandLine cmd) {
+        return !cmd.hasOption(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier()) ||
+                cmd.getOptionValue(InputParamIdentifierEnum.INPUT_SOURCE.getParamIdentifier()).equals("-");
+    }
+
+    private boolean outputAdapterIsDefault(CommandLine cmd) {
+        return !cmd.hasOption(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier()) ||
+                cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier()).equals("-");
     }
 }
