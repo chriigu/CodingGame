@@ -19,7 +19,7 @@ public class CSVWriter implements OutputWriter {
     }
 
     @Override
-    public String writeOutputString(final List<Double> valuesToWrite, ProcessParamsDto processParamsDto) {
+    public String writeOutputString(final List<Double> valuesToWrite, final ProcessParamsDto processParamsDto) {
         if(valuesToWrite == null || valuesToWrite.isEmpty()) {
             return "\n";
         }

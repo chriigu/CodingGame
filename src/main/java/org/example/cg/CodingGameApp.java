@@ -29,7 +29,7 @@ public class CodingGameApp {
         List<Double> valuesToProcess = processParamsDto.inputReader().readInputString(inputString);
         List<Double> resultList = processParamsDto.action().execute(valuesToProcess);
         String outputString = processParamsDto.outputWriter().writeOutputString(resultList, processParamsDto);
-        processParamsDto.outputAdapter().writeResultString(outputString);
+        processParamsDto.outputAdapter().writeResultString(outputString, processParamsDto);
 
         return ExitCodeEnum.OK.getExitCode();
     }

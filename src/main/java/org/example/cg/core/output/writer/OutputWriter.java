@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface OutputWriter {
 
-    String writeOutputString(final List<Double> valuesToWrite, ProcessParamsDto processParamsDto);
+    String writeOutputString(final List<Double> valuesToWrite, final ProcessParamsDto processParamsDto);
 }

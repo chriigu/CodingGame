@@ -15,6 +15,7 @@ import org.example.cg.core.input.enums.InputParamIdentifierEnum;
 import org.example.cg.core.input.reader.CSVReader;
 import org.example.cg.core.input.reader.InputReader;
 import org.example.cg.core.output.adapter.CLIOutputAdapter;
+import org.example.cg.core.output.adapter.FileOutputAdapter;
 import org.example.cg.core.output.adapter.OutputAdapter;
 import org.example.cg.core.output.enums.ExitCodeEnum;
 import org.example.cg.core.output.writer.CSVWriter;
@@ -71,11 +72,12 @@ public class CLIArgsParser {
             InputAdapter inputAdapter = parseInputAdapter(cmd);
             InputReader inputReader = parseInputReader(cmd);
             OutputAdapter outputAdapter = parseOutputAdapter(cmd);
+            String outputDestination = parseOutputDestination(cmd);
             OutputWriter outputWriter = parseOutputWriter(cmd);
             Action action = parseAction(cmd);
             String valueToProcess = parseValueSource(cmd);
 
-            ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, action, valueToProcess);
+            ProcessParamsDto processParamsDto = new ProcessParamsDto(inputAdapter, inputReader, outputAdapter, outputWriter, outputDestination, action, valueToProcess);
             log.info("Parsed data: {}", processParamsDto);
             return processParamsDto;
         } catch (ParseException e) {
@@ -128,7 +130,21 @@ public class CLIArgsParser {
 
         String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier());
         log.info("Parsed output method (-{}): {}", InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier(), parsedValue);
-        return new CLIOutputAdapter();
+
+        if(outputAdapterIsDefault(cmd)) {
+            return new CLIOutputAdapter();
+        }
+
+        return new FileOutputAdapter();
+    }
+
+    String parseOutputDestination(final CommandLine cmd) {
+        checkCommandLine(cmd);
+
+        String parsedValue = cmd.getOptionValue(InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier());
+        log.info("Parsed output destination (-{}): {}", InputParamIdentifierEnum.OUTPUT_DESTINATION.getParamIdentifier(), parsedValue);
+
+        return parsedValue;
     }
 
     OutputWriter parseOutputWriter(final CommandLine cmd) {

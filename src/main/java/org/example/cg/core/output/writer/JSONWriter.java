@@ -19,7 +19,7 @@ public class JSONWriter implements OutputWriter {
     }
 
     @Override
-    public String writeOutputString(List<Double> valuesToWrite, ProcessParamsDto processParamsDto) {
+    public String writeOutputString(final List<Double> valuesToWrite, final ProcessParamsDto processParamsDto) {
         StringBuilder sb = new StringBuilder();
         switch (processParamsDto.action().getIdentifier()) {
             case SUM -> {
